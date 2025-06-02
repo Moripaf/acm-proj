@@ -72,16 +72,20 @@ impl PointSet {
                 Rc::new(PointRef::new(p, i - 1))
             })
             .collect();
+        return PointSet::from_point_refs(references);
+        
+    }
+    pub fn from_point_refs(prf: Vec<Rc<PointRef>>) -> Self {
         let clone_vec_rc = |p: &Rc<PointRef>| -> Rc<PointRef> { p.clone() };
-        let mut xs: Vec<Rc<PointRef>> = references.iter().map(clone_vec_rc).collect();
+        let mut xs: Vec<Rc<PointRef>> = prf.iter().map(clone_vec_rc).collect();
         xs.sort_by(|a,b| a.point.x.total_cmp(&b.point.x));
-        let mut ys: Vec<Rc<PointRef>> = references.iter().map(clone_vec_rc).collect();
+        let mut ys: Vec<Rc<PointRef>> = prf.iter().map(clone_vec_rc).collect();
         ys.sort_by(|a,b| a.point.y.total_cmp(&b.point.y));
         Self {
-            points: references,
+            points: prf,
             px: xs,
             py: ys,
-        }
+        }       
     }
     pub fn get_middle_x(&self) -> f32 {
         let idx = self.px.len() / 2;
