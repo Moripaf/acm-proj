@@ -1,8 +1,22 @@
-use std::rc::Rc;
+use std::{rc::Rc, str::FromStr};
 
 pub struct Point {
     pub x: f32,
     pub y: f32,
+}
+impl FromStr for Point {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let parts: Vec<&str> = s.split(' ').collect();
+        if parts.len() != 2 {
+            return Err("Invalid point format".to_string());
+        }
+        let x = parts[0].parse::<f32>().map_err(|_| "Invalid x coordinate".to_string())?;
+        let y = parts[1].parse::<f32>().map_err(|_| "Invalid y coordinate".to_string())?;
+        Ok(Point { x, y })
+    }
+    
 }
 impl Point {
     pub fn new(x: f32, y: f32) -> Point { Point { x: x, y: y } }

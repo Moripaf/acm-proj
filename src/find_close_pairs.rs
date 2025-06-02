@@ -1,9 +1,7 @@
-use points::*;
+use crate::points::{PointRef,PointSet,Point};
 use std::rc::Rc;
 
-use crate::points::Point;
 
-pub mod points;
 pub struct Result {
     pub p1: Point,
     pub p2: Point,

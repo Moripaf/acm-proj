@@ -1,5 +1,8 @@
-use closest_pair_points::find_closest_pair;
-use closest_pair_points::points::Point;
+pub mod find_close_pairs;
+pub mod points;
+pub mod planes;
+use crate::points::{PointRef,PointSet,Point};
+
 fn main() {
     let stdin = std::io::stdin();
     let mut buffer = String::new();
@@ -30,7 +33,7 @@ fn main() {
         };
         is_x = !is_x;
     });
-    let res = find_closest_pair(points);
+    let res = find_close_pairs::find_closest_pair(points);
     println!(
         "the closest points where ({0},{1}) and ({2},{3}) with their distance being: {4}",
         res.p1.x, res.p1.y, res.p2.x, res.p2.y, res.distance
