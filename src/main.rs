@@ -11,20 +11,20 @@ fn main() {
     stdin.read_line(&mut buffer).unwrap();
     let mut points: Vec<Point> = Vec::with_capacity(number);
     let mut is_x = true;
-    let mut coords_x = 0;
+    let mut coords_x = 0.0;
     buffer.trim().split(" ").for_each(|x| {
         println!("{}", x);
         if is_x {
-            coords_x = x.parse().unwrap_or_else(|e| {
+            coords_x = x.parse::<f32>().unwrap_or_else(|e| {
                 println!("error at x");
-                0
+                0.0
             });
         } else {
             points.push(Point::new(
                 coords_x,
-                x.parse().unwrap_or_else(|e| {
+                x.parse::<f32>().unwrap_or_else(|e| {
                     println!("error at y");
-                    0
+                    0.0
                 }),
             ));
         };

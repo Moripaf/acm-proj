@@ -7,7 +7,7 @@ pub mod points;
 pub struct Result {
     pub p1: Point,
     pub p2: Point,
-    pub distance: f64,
+    pub distance: f32,
 }
 impl Result {
     pub fn new(p1: Point, p2: Point) -> Self {
@@ -16,8 +16,8 @@ impl Result {
     }
     pub fn from_single_point(p1: Point) -> Self {
         let p2 = Point {
-            x: i32::MAX,
-            y: i32::MAX,
+            x: f32::MAX,
+            y: f32::MAX,
         };
         Self::new(p1, p2)
     }
@@ -49,9 +49,9 @@ fn compute_cpp(points: &PointSet) -> Result {
 fn merge(set1: PointSet, set2: PointSet, min_res: Result) -> Result {
     // construct the strip
     let mut res = min_res;
-    let middle = (set1.px.last().unwrap().point.x + set2.px.first().unwrap().point.x) / 2;
-    let (_, right) = set1.split(middle - res.distance.ceil() as i32);
-    let (left, _) = set2.split(middle + res.distance.floor() as i32);
+    let middle = (set1.px.last().unwrap().point.x + set2.px.first().unwrap().point.x) / 2.0;
+    let (_, right) = set1.split(middle - res.distance);
+    let (left, _) = set2.split(middle + res.distance);
     let size = left.py.len() + right.py.len();
     let mut strip: Vec<Rc<PointRef>> = Vec::with_capacity(size);
     let mut i: usize = 0;
