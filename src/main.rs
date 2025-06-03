@@ -10,13 +10,21 @@ use planes::Plane;
 fn main() {
     let stdin = std::io::stdin();
     let mut buffer = String::new();
+    println!("Enter the number of planes:");
+    stdin.read_line(&mut buffer).unwrap();
+    let num_planes: usize = buffer.trim().parse().unwrap();
+    buffer.clear();
+    if num_planes < 2 {
+        println!("You need at least 2 planes to find near misses.");
+        return;
+    }
     println!("enter the length of the simulation:");
     stdin.read_line(&mut buffer).unwrap();
     let length: usize = buffer.trim().parse().unwrap();
     buffer.clear();
-    println!("Enter plains as idx x y z speed direction in a single line: ");
-    let mut planes: Vec<Plane> = Vec::with_capacity(5);
-    for i in 0..4 {
+    println!("Enter each plane as idx x y z speed direction and separate planes by newline:");
+    let mut planes: Vec<Plane> = Vec::with_capacity(num_planes);
+    for _i in 0..num_planes {
         stdin.read_line(&mut buffer).unwrap();
         planes.push(Plane::from_str(&buffer).unwrap());
         buffer.clear();

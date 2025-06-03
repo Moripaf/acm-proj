@@ -26,12 +26,18 @@ impl Plane {
         Rc::get_mut(&mut self.point).unwrap().point.x += distance * (self.direction as f32).cos();
         Rc::get_mut(&mut self.point).unwrap().point.y += distance * (self.direction as f32).sin();
     }
+    fn strip_trailing_newline(input: &str) -> &str {
+    input
+        .strip_suffix("\r\n")
+        .or(input.strip_suffix("\n"))
+        .unwrap_or(input)
+    }
 }
 impl FromStr for Plane {
     type Err = String;
-
+ 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let parts: Vec<&str> = s.split(' ').collect();
+        let parts: Vec<&str> = Plane::strip_trailing_newline(s).split(' ').collect();
 
         if parts.len() < 6 {
             return Err("Invalid plane format".to_string());

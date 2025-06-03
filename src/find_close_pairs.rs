@@ -87,11 +87,11 @@ impl PointsResult {
     }
 }
 pub fn find_all_near_misses(state: &mut State, time:usize){
-    for i in 0..(time/20) {
+    for _i in 0..(time/20) {
         {
          let points = state.as_point_refs(); 
-         let pointSet = PointSet::from_point_refs(points);
-         compute_cpp(&pointSet, state);
+         let point_set = PointSet::from_point_refs(points);
+         compute_cpp(&point_set, state);
         }
        state.move_next_state();
     } 
