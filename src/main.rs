@@ -6,7 +6,6 @@ use std::str::FromStr;
 use find_close_pairs::State;
 use planes::Plane;
 
-use crate::points::{PointRef,PointSet,Point};
 
 fn main() {
     let stdin = std::io::stdin();
@@ -16,12 +15,11 @@ fn main() {
     let length: usize = buffer.trim().parse().unwrap();
     buffer.clear();
     println!("Enter plains as idx x y z speed direction in a single line: ");
-    stdin.read_line(&mut buffer).unwrap();
     let mut planes: Vec<Plane> = Vec::with_capacity(5);
-    for i in 0..1 {
+    for i in 0..4 {
+        stdin.read_line(&mut buffer).unwrap();
         planes.push(Plane::from_str(&buffer).unwrap());
         buffer.clear();
-        stdin.read_line(&mut buffer).unwrap();
     }
     let mut st = State::new(5.0, 1000, planes);
     find_close_pairs::find_all_near_misses(&mut st, length);

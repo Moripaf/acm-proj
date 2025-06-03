@@ -18,6 +18,12 @@ impl FromStr for Point {
     }
     
 }
+impl ToString for Point {
+    fn to_string(&self) -> String {
+        format!("({}, {})", self.x, self.y)
+    }
+    
+}
 impl Point {
     pub fn new(x: f32, y: f32) -> Point { Point { x: x, y: y } }
     pub fn distance(&self, other: &Point) -> f32 {
