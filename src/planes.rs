@@ -5,11 +5,12 @@ pub struct Plane {
     pub point:Rc<PointRef>,
     pub altitude: i32,
     pub speed: u32,
-    pub direction: u32,
+    pub direction: f32,
 }
 
 impl Plane {
-    pub fn new(p: Point, altitude: i32, speed: u32, direction: u32, index: usize) -> Self {
+    pub fn new(p: Point, altitude: i32, speed: u32, dir: u32, index: usize) -> Self {
+        let direction = (dir as f32).to_radians();
         Plane {
             point: Rc::new(PointRef { point: p, idx: index }),
             altitude,
@@ -23,8 +24,12 @@ impl Plane {
     /// /// * `time` - The time in seconds for which the plane should move
     pub fn move_plane(&mut self, time: f32) {
         let distance = self.speed as f32 * time;
-        Rc::get_mut(&mut self.point).unwrap().point.x += distance * (self.direction as f32).cos();
-        Rc::get_mut(&mut self.point).unwrap().point.y += distance * (self.direction as f32).sin();
+        let mut x_coeff = self.direction.cos();
+        let mut y_coeff = self.direction.sin();
+        if x_coeff < f32::EPSILON {x_coeff = 0.0}
+        if y_coeff < f32::EPSILON{y_coeff = 0.0}
+        Rc::get_mut(&mut self.point).unwrap().point.x += distance * x_coeff;
+        Rc::get_mut(&mut self.point).unwrap().point.y += distance * y_coeff;
     }
     fn strip_trailing_newline(input: &str) -> &str {
     input
