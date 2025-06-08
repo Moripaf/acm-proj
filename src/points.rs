@@ -131,7 +131,7 @@ impl PointSet {
                 .px
                 .iter()
                 .filter_map(|p| -> Option<Rc<PointRef>> {
-                    if p.point.x > x {
+                    if p.point.x >= x {
                         Some(p.clone())
                     } else {
                         None

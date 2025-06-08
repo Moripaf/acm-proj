@@ -1,6 +1,7 @@
 use crate::planes::{Plane};
 use crate::points::{Point, PointRef, PointSet};
 use core::f32;
+use std::cmp::min;
 use std::rc::Rc;
 use std::collections::HashMap;
 
@@ -25,16 +26,19 @@ impl State {
 
         let key = format!("{}-{}", p1.idx, p2.idx);
         let value = PointsResult::new(Point { x: p1.point.x, y: p1.point.y }, Point { x: p2.point.x, y: p2.point.y });
-        if value.distance > self.miss_distance ||
-             self.planes[p1.idx].altitude - self.planes[p2.idx].altitude > self.miss_altitude  {
+        if value.distance > self.miss_distance {
             return;
         }
+        if (self.planes[p1.idx].altitude - self.planes[p2.idx].altitude).abs() > self.miss_altitude {
+            return;
+        } 
         // println!("({}, {}) - ({}, {})", value.p1.x, value.p1.y, value.p2.x, value.p2.y);
-        if !self.contents.contains_key(&key) {
+        else if !self.contents.contains_key(&key) {
             self.contents.insert(key, (self.current_time,value));
         }
     }
     pub fn move_next_state(&mut self) {
+        self.current_time+=20;
         for p in &mut self.planes {
             p.move_plane(20.0);
         } 
@@ -125,21 +129,36 @@ fn merge(set1: PointSet, set2: PointSet, min_res: PointsResult, results: &mut St
     let middle = (set1.px.last().unwrap().point.x + set2.px.first().unwrap().point.x) / 2.0;
     let (_, right) = set1.split(middle - res.distance);
     let (left, _) = set2.split(middle + res.distance);
+    if left.py.len()==0 || right.py.len()==0 {
+        return res;
+    }
     let size = left.py.len() + right.py.len();
     let mut strip: Vec<Rc<PointRef>> = Vec::with_capacity(size);
     let mut i: usize = 0;
     let mut j: usize = 0;
-    for k in 0..size {
-        strip[k] = if left.py[i].point.y > right.py[j].point.y {
+    for _k in 0..size {
+        if i == left.py.len() {
+            let mut v1 = right.py[j..].iter().map(|item| item.clone()).collect();
+            strip.append(&mut v1);
+            break;
+        }
+        else if j == right.py.len() {
+            let mut v2 = left.py[i..].iter().map(|item| item.clone()).collect();
+            strip.append(&mut v2);
+            break;
+        }
+        else {
+            strip.push(if left.py[i].point.y > right.py[j].point.y {
             i = i + 1;
             left.py[i - 1].clone()
-        } else {
-            j = j + 1;
-            right.py[j - 1].clone()
-        };
+            } else {
+                j = j + 1;
+                right.py[j - 1].clone()
+            });
+        }
     }
     for k in 0..size {
-        for i in k..k+8 {
+        for i in k+1..min(k+7,size) {
             let t_dist = strip[k].point.distance(&strip[i].point);
             // println!("({}, {}) , ({}, {})", strip[k].point.x, strip[k].point.y, strip[i].point.x, strip[i].point.y);
             results.try_push_points(strip[k].clone(), strip[i].clone());

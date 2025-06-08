@@ -26,8 +26,8 @@ impl Plane {
         let distance = self.speed as f32 * time;
         let mut x_coeff = self.direction.cos();
         let mut y_coeff = self.direction.sin();
-        if x_coeff < f32::EPSILON {x_coeff = 0.0}
-        if y_coeff < f32::EPSILON{y_coeff = 0.0}
+        if x_coeff.abs() < f32::EPSILON {x_coeff = 0.0}
+        if y_coeff.abs() < f32::EPSILON{y_coeff = 0.0}
         Rc::get_mut(&mut self.point).unwrap().point.x += distance * x_coeff;
         Rc::get_mut(&mut self.point).unwrap().point.y += distance * y_coeff;
     }
