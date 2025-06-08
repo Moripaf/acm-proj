@@ -1,5 +1,5 @@
 [package]
-name = "closest_pair_points"
+name = "acm_proj"
 version = "0.1.0"
 edition = "2021"
 
